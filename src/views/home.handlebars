@@ -1,0 +1,15 @@
+<h1>Hola, {{user.nombre}}</h1>
+
+{{!-- importamos lo que tiene contador de la carpeta cont --}}
+{{>cont/contador}}
+
+{{#if esTutor}}
+{{#each cursos}}
+<div>
+    <p>el curso es {{this.numCurso}} en el dia {{this.dia}}</p>
+</div>
+
+{{/each}}
+{{else}}
+<p>no sos tutor</p>
+{{/if}}

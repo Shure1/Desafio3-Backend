@@ -1,0 +1,17 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/{{css}}">
+    <title>Document</title>
+</head>
+<body>
+    {{!-- el > indica que siempre estara el nav en la carpeta partials --}}
+    {{>nav}}
+    {{{body}}}
+    {{>footer}}
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    {{!-- el script y los links de css vienen de public --}}
+    <script src="js/{{js}}"></script>
+</body>
+</html>

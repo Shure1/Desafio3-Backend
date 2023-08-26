@@ -13,7 +13,8 @@ class ProductManager {
       console.log("Producto ya encontrado");
       return;
     } else {
-      prodsJson.push(product);
+      const producto = new Product(product);
+      prodsJson.push(producto);
       /* pasamos de objeto a texto plano (stringify) */
       await fs.writeFile(this.path, JSON.stringify(prodsJson));
       return prodsJson;
@@ -35,7 +36,20 @@ class ProductManager {
       return [prod];
     } else {
       console.log("Producto no encontrado");
-      return [];
+      return;
+    }
+  }
+
+  async getProductByCode(code) {
+    const prodsJson = JSON.parse(await fs.readFile(this.path, "utf-8"));
+    const prod = prodsJson.find((prod) => prod.code === parseInt(code));
+
+    if (prod) {
+      console.log(prod);
+      return [prod];
+    } else {
+      console.log("Producto no encontrado");
+      return;
     }
   }
 
@@ -45,15 +59,18 @@ class ProductManager {
     const productoIndice = prodsJson.findIndex(
       (producto) => producto.id === id
     );
-    if (productoIndice != 1) {
+    console.log(productoIndice);
+    if (productoIndice !== -1) {
       /* si hay una propiedad distinta lo sobreescribe, sino lo deja tal como esta */
       prodsJson[productoIndice] = {
         ...prodsJson[productoIndice],
         ...actualizacion,
       };
       await fs.writeFile(this.path, JSON.stringify(prodsJson));
+      return "producto actualizado";
     } else {
       console.log("producto no encontrado");
+      return "producto no encontrado";
     }
   }
 
@@ -70,6 +87,7 @@ class ProductManager {
     let prodsJson = JSON.parse(await fs.readFile(this.path, "utf-8"));
     const verificar = prodsJson.find((producto) => producto.id === id);
 
+    /* si no encuentra el producto arrojara error, si lo encuentra filtramos el json para eliminarlo */
     !verificar ||
       (prodsJson = prodsJson.filter((productos) => productos.id !== id));
     await fs.writeFile(this.path, JSON.stringify(prodsJson));
@@ -110,14 +128,14 @@ class CarritoManager {
 
   async AddCarrito(carritoNew) {
     const carritoJson = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    const carritoFilter = carritoJson.find(
-      (carrito) => carrito.id === carritoNew.id
-    );
+
+    const carrito = new Carrito(carritoNew);
+    const carritoFilter = carritoJson.find((carr) => carr.id === carrito.id);
 
     if (carritoFilter) {
       console.log("carrito ya ingresado");
     } else {
-      carritoJson.push(carritoNew);
+      carritoJson.push(carrito);
 
       /* pasamos de objeto a texto plano (stringify) */
       await fs.writeFile(this.path, JSON.stringify(carritoJson));
@@ -126,12 +144,14 @@ class CarritoManager {
 
   async getCarrito(id) {
     const carritoJson = JSON.parse(await fs.readFile(this.path, "utf-8"));
+    console.log(carritoJson);
     const carr = carritoJson.find((carr) => carr.id === id);
+    console.log(carr);
 
     if (carr) {
-      console.log(carr);
+      return carr;
     } else {
-      console.log("Producto no encontrado");
+      return "Producto no encontrado";
     }
   }
 
@@ -141,7 +161,7 @@ class CarritoManager {
       (carrito) => carrito.id === idCarrito
     );
 
-    /* buscamos la posicion del carro */
+    /* buscamos la posicion del carro si no esta creado */
     if (posicionCarrito !== -1) {
       const ProdJson = JSON.parse(
         await fs.readFile(this.pathProducts, "utf-8")
@@ -160,15 +180,17 @@ class CarritoManager {
         carritoJson[posicionCarrito].products[carritoProd].cantidad++;
 
         await fs.writeFile(this.path, JSON.stringify(carritoJson));
+        return carritoJson[posicionCarrito];
       } else {
         /* si el carrito existe pero el producto no creamos un nuevo producto */
-        const productoAdd = new ProdCarrito(prodFilter);
+        const productoAdd = new ProdCarrito(prodFilter.id);
 
         carritoJson[posicionCarrito].products.push(productoAdd);
         await fs.writeFile(this.path, JSON.stringify(carritoJson));
+        return carritoJson[posicionCarrito];
       }
     } else {
-      console.log("carrito no encontrado");
+      return "carrito no encontrado";
     }
   }
 }

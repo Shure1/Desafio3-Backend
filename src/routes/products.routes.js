@@ -30,13 +30,14 @@ prodsRouter.get("/:id", async (req, res) => {
 });
 
 prodsRouter.post("/", async (req, res) => {
-  const { id } = req.body;
+  const { code } = req.body;
 
-  //!crear un getproductbyCode(code) para usarlo aca y no el buscar por id
-  const confirmacion = await ProductManagerServer.getProductById(parseInt(id));
+  const confirmacion = await ProductManagerServer.getProductByCode(
+    parseInt(code)
+  );
 
   if (confirmacion) {
-    req.status(200).send("producto ya creado");
+    res.status(200).send("producto ya creado");
   } else {
     const add = await ProductManagerServer.addProduct(req.body);
     add && res.status(200).send("producto creado");
@@ -49,8 +50,8 @@ prodsRouter.put("/:id", async (req, res) => {
   const confirmacion = await ProductManagerServer.getProductById(parseInt(id));
 
   if (confirmacion) {
-    await ProductManagerServer.uptadeProduct(id, req.body);
-    res.status(200).send("producto creado");
+    await ProductManagerServer.uptadeProduct(parseInt(id), req.body);
+    res.status(200).send("producto actualizado");
   } else {
     res.status(404).send("producto no encontrado");
   }
