@@ -32,9 +32,7 @@ prodsRouter.get("/:id", async (req, res) => {
 prodsRouter.post("/", async (req, res) => {
   const { code } = req.body;
 
-  const confirmacion = await ProductManagerServer.getProductByCode(
-    parseInt(code)
-  );
+  const confirmacion = await ProductManagerServer.getProductByCode(code);
 
   if (confirmacion) {
     res.status(200).send("producto ya creado");

@@ -13,7 +13,15 @@ class ProductManager {
       console.log("Producto ya encontrado");
       return;
     } else {
-      const producto = new Product(product);
+      const { title, description, price, code, stock, thumbnail } = product;
+      const producto = new Product(
+        title,
+        description,
+        parseInt(price),
+        code,
+        parseInt(stock),
+        thumbnail
+      );
       prodsJson.push(producto);
       /* pasamos de objeto a texto plano (stringify) */
       await fs.writeFile(this.path, JSON.stringify(prodsJson));
@@ -42,7 +50,7 @@ class ProductManager {
 
   async getProductByCode(code) {
     const prodsJson = JSON.parse(await fs.readFile(this.path, "utf-8"));
-    const prod = prodsJson.find((prod) => prod.code === parseInt(code));
+    const prod = prodsJson.find((prod) => prod.code === code);
 
     if (prod) {
       console.log(prod);
@@ -133,12 +141,13 @@ class CarritoManager {
     const carritoFilter = carritoJson.find((carr) => carr.id === carrito.id);
 
     if (carritoFilter) {
-      console.log("carrito ya ingresado");
+      return "carrito ya ingresado";
     } else {
       carritoJson.push(carrito);
 
       /* pasamos de objeto a texto plano (stringify) */
       await fs.writeFile(this.path, JSON.stringify(carritoJson));
+      return "carrito ingresado exitosamente";
     }
   }
 

@@ -65,19 +65,27 @@ const io = new Server(serverExpress);
 
 io.on("connection", (socket) => {
   console.log("servidor Socket.io conectado");
-  socket.on("mensajeConexion", (user) => {
+  /* socket.on("mensajeConexion", (user) => {
     if (user.rol === "admin") {
       socket.emit("credencialesConexion", "Usuario valido");
     } else {
       socket.emit("credencialesConexion", "Usuario no Valiso");
     }
-  });
+  }); */
 
   socket.on("nuevoProducto", (nuevoProd) => {
     const manager = new ProductManager();
-    manager.addProduct(nuevoProd);
-    const mostrar = manager.getProducts();
-    socket.emit("prods", mostrar);
+    const añadirProducto = manager.addProduct(nuevoProd);
+    if (añadirProducto) {
+      // Emitir un mensaje de éxito al cliente
+      socket.emit("mensaje", "producto añadido correctamente");
+      // Emitir la lista actualizada de productos al cliente
+      const mostrar = manager.getProducts();
+      socket.emit("prods", mostrar);
+    } else {
+      // Emitir un mensaje de error al cliente
+      socket.emit("mensaje", "producto ya agregado anteriormente");
+    }
   });
 });
 
