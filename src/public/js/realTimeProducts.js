@@ -24,7 +24,7 @@ form.addEventListener("submit", (e) => {
               <p>Stock: ${producto.stock}</p>
             `;
 
-            // Agrega el productoDiv al div "container-products"
+            // Agrego el productoDiv al div "container-products"
             container.appendChild(productoDiv);
           }
         });
