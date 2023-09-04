@@ -73,14 +73,14 @@ io.on("connection", (socket) => {
     }
   }); */
 
-  socket.on("nuevoProducto", (nuevoProd) => {
+  socket.on("nuevoProducto", async (nuevoProd) => {
     const manager = new ProductManager();
-    const añadirProducto = manager.addProduct(nuevoProd);
+    const añadirProducto = await manager.addProduct(nuevoProd);
     if (añadirProducto) {
       // Emitir un mensaje de éxito al cliente
       socket.emit("mensaje", "producto añadido correctamente");
       // Emitir la lista actualizada de productos al cliente
-      const mostrar = manager.getProducts();
+      const mostrar = await manager.getProducts();
       socket.emit("prods", mostrar);
     } else {
       // Emitir un mensaje de error al cliente
@@ -90,7 +90,6 @@ io.on("connection", (socket) => {
 });
 
 //?RUTAS A LA API
-
 app.use("/api/products", prodsRouter);
 app.use("/api/carrito", carritoRouter);
 

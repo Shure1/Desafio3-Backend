@@ -5,6 +5,7 @@ const container = document.querySelector(".container-products");
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
+  form.classList.add("submitted");
   const datForm = new FormData(e.target); //Me genera un objeto iterador
   const prod = Object.fromEntries(datForm); //De un objeto iterable genero un objeto simple
   socket.emit("nuevoProducto", prod);
@@ -34,8 +35,4 @@ form.addEventListener("submit", (e) => {
     }
   });
   e.target.reset();
-});
-
-botonProds.addEventListener("click", () => {
-  console.log("Hola");
 });
